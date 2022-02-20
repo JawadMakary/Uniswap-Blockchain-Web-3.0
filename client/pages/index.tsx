@@ -1,7 +1,10 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-
+import Header from '../components/Header'
+const style={
+  wrapper:'h-screen max-h-screen h-min-screen w-screen bg-[#2d242f] text-white select-none flex flex-col justify-between',
+}
 const Home: NextPage = () => {
   return (
     <div className="">
@@ -9,7 +12,12 @@ const Home: NextPage = () => {
         <title>Uniswap clone </title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-        hello, world
+       <div className={style.wrapper} >
+      {/* header */}
+      <Header />
+      {/* main */}
+      {/* transaction history */}
+       </div>
       </div>
   )
 }
