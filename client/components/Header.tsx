@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import Image from 'next/image'
 import { FiArrowUpRight } from 'react-icons/fi'
 import { AiOutlineDown } from 'react-icons/ai'
 import { HiOutlineDotsVertical } from 'react-icons/hi'
 import ethLogo from '../assets/eth.png'
 import uniswapLogo from '../assets/uniswap.png'
-
+import { TransactionContext } from '../context/TransactionsContext'
 const style = {
   wrapper: `p-4 w-screen flex justify-between items-center`,
   headerLogo: `flex w-1/4 items-center justify-start`,
@@ -20,9 +20,11 @@ const style = {
   buttonIconContainer: `flex items-center justify-center w-8 h-8`,
   buttonAccent: `bg-[#172A42] border border-[#163256] hover:border-[#234169] h-full rounded-2xl flex items-center justify-center text-[#4F90EA]`,
 }
-const connectWallet = () => {}
+
 const Header = () => {
   const [selectedNav, setSelectedNav] = useState('swap')
+  const { connectWallet, currentAccount } = useContext(TransactionContext)
+  console.log(connectWallet, currentAccount)
   return (
     <div className={style.wrapper}>
       <div className={style.headerLogo}>
@@ -75,19 +77,26 @@ const Header = () => {
             <AiOutlineDown />
           </div>
         </div>
-        <div
-          onClick={() => connectWallet()}
-          className={`${style.button} ${style.buttonPadding}`}
-        >
-          <div className={`${style.buttonAccent} ${style.buttonPadding}`}>
-            Connect Wallet
+        {currentAccount ? (
+            <div className={`${style.button} ${style.buttonPadding}`}>
+            <div className={style.buttonTextContainer}>userName</div>
           </div>
-        </div>
+        ) : (
+          <div
+            onClick={() => connectWallet()}
+            className={`${style.button} ${style.buttonPadding}`}
+          >
+            <div className={`${style.buttonAccent} ${style.buttonPadding}`}>
+              Connect Wallet
+            </div>
+          </div>
+        )}
+
         <div className={`${style.button} ${style.buttonPadding}`}>
           <div className={`${style.buttonIconContainer}mx-2`}>
             <HiOutlineDotsVertical />
-            </div>
-            </div>
+          </div>
+        </div>
       </div>
     </div>
   )

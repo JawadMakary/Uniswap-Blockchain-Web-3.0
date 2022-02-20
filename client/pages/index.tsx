@@ -19,6 +19,7 @@ const Home: NextPage = () => {
       {/* main */}
       <Main />
       {/* transaction history */}
+      transactio
        </div>
       </div>
   )
