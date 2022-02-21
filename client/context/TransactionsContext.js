@@ -10,9 +10,14 @@ if (typeof window !== 'undefined') {
 
 export const TransactionProvider = ({ children }) => {
   const [currentAccount, setCurrentAccount] = useState()
-  useEffect(()=>{
+  const [isLoading, setIsLoading] = useState(false)
+  const [formData, setFormData] = useState({
+    amount: '',
+    addressTo: '',
+  })
+  useEffect(() => {
     checkIfWalletIsConnected()
-  },[])
+  }, [])
 
   /**
    * Checks if MetaMask is installed and an account is connected
@@ -28,7 +33,6 @@ export const TransactionProvider = ({ children }) => {
       if (accounts.length) {
         setCurrentAccount(accounts[0])
         // console.log("wallet already connected")
-
       }
     } catch (error) {
       console.error(error)
@@ -52,14 +56,60 @@ export const TransactionProvider = ({ children }) => {
       throw new Error('No ethereum object.')
     }
   }
- 
-  
-
+  /**
+   * Executes a transaction
+   * @param {*} metamask Injected MetaMask code from the browser
+   * @param {string} currentAccount Current user's address
+   */
+  const sendTransaction = async (
+    metamask = eth,
+    connectedAccount = currentAccount
+  ) => {
+    try {
+      if (!metamask) return alert('please install metamask')
+      const { addressTo, amount } = formData
+      const transactionContract = getEthereumContract()
+      const parsedAmount = ethers.utils.parseEther(amount)
+      await metamask.request({
+        method: 'eth_sendTransaction',
+        params: [
+          {
+            from: connectedAccount,
+            to: addressTo,
+            gas: '0x7EF40',
+            value: parsedAmount._hex,
+          },
+        ],
+      })
+      const transactionHash = await transactionContract.publishTransaction(
+        addressTo,
+        parsedAmount,
+        `Transferring ETH ${parsedAmount} to ${addressTo}`,
+        'TRANSFER'
+      )
+      setIsLoading(true)
+      await transactionHash.wait()
+      // await saveTransaction(
+      //   transactionHash.hash,
+      //   amount,
+      //   addressTo,
+      //   connectedAccount
+      // )
+      setIsLoading(false)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+  const handleChange = (e, name) => {
+    setFormData((prevState) => ({ ...prevState, [name]: e.target.value }))
+  }
   return (
     <TransactionContext.Provider
       value={{
         connectWallet,
         currentAccount,
+        sendTransaction,
+        handleChange
       }}
     >
       {children}
