@@ -28,7 +28,9 @@ const Header = () => {
   const[userName,setUserName]=useState('')
   useEffect(() => {
     //get 7 letters of wallet address and give me everything after 35
+    if(currentAccount){
     setUserName(`${currentAccount.substring(0, 7)}...${currentAccount.slice(35)}`)
+    }
 
 
   },[currentAccount])

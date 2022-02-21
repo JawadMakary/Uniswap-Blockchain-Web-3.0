@@ -4,9 +4,10 @@ const main = async () => {
   );
   const transactionContract = await transactionFactory.deploy();
   await transactionContract.deployed();
+  console.log(transactionContract.address);
   console.log("Transactions deployed to: ", transactionContract.address);
   //IIF --> IMMEDIATELY ENVOKED FUNCTION
-  (async () => {
+  ;(async () => {
     try {
       await main();
       process.exit(0);
