@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Header from '../components/Header'
 import Main from '../components/Main'
+import TransactionsHistory from '../components/TransactionsHistory'
 const style = {
   wrapper:
   // bg-[#2d242f]
@@ -29,7 +30,7 @@ const Home: NextPage = () => {
         {/* main */}
         <Main />
         {/* transaction history */}
-        transactio
+        <TransactionsHistory />
       </div>
     </div>
   )
