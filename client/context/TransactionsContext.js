@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { contractABI, contractAddress } from '../lib/constants'
 import { client } from '../lib/sanityClient'
 import { ethers } from 'ethers'
+import { useRouter } from 'next/router'
+
 export const TransactionContext = React.createContext()
 
 let eth
@@ -19,6 +21,7 @@ const getEthereumContract = () => {
   )
 }
 export const TransactionProvider = ({ children }) => {
+  const router = useRouter()
   const [currentAccount, setCurrentAccount] = useState()
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -41,6 +44,16 @@ export const TransactionProvider = ({ children }) => {
       await client.createIfNotExists(userDoc)
     })()
   }, [currentAccount])
+  /**
+   * Trigger loading modal
+   */
+  useEffect(() => {
+    if (isLoading) {
+      router.push(`/?loading=${currentAccount}`)
+    } else {
+      router.push(`/`)
+    }
+  }, [isLoading])
 
   /**
    * Checks if MetaMask is installed and an account is connected
@@ -164,7 +177,7 @@ export const TransactionProvider = ({ children }) => {
         sendTransaction,
         handleChange,
         formData,
-        isLoading
+        isLoading,
       }}
     >
       {children}
